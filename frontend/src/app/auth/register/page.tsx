@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +30,8 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 
+import { useAuth } from "@/context/authContext";
+
 const formSchema: z.ZodSchema = z
   .object({
     email: z.string().email({
@@ -51,9 +54,23 @@ const formSchema: z.ZodSchema = z
     sex: z.enum(["M", "F", "O"], {
       invalid_type_error: "Nieprawidłowa opcja.",
     }),
-    region: z.enum(["EU", "US", "ASIA"], {
-      invalid_type_error: "Nieprawidłowa opcja.",
-    }),
+    region: z.enum(
+      [
+        "AM_NORTH",
+        "AM_SOUTH",
+        "AUS",
+        "EU_WEST",
+        "EU_EAST",
+        "EU_SOUTH",
+        "ASI_EAST",
+        "ASI_MID",
+        "ASI_WEST",
+        "AFR",
+      ],
+      {
+        invalid_type_error: "Nieprawidłowa opcja.",
+      }
+    ),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     message: "Hasła są różne",
@@ -61,6 +78,10 @@ const formSchema: z.ZodSchema = z
   });
 
 function Register() {
+  const router = useRouter();
+
+  const { user } = useAuth();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,13 +90,13 @@ function Register() {
       passwordConfirmation: "",
       birthDate: "",
       sex: "O",
-      region: "EU",
+      region: "EU_WEST",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch(`${process.env.BACKEND_URL}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,9 +107,15 @@ function Register() {
       if (data.error) {
         throw new Error(data.errorMessage);
       }
+      router.push("/");
     } catch (err) {
       console.log(err);
     }
+  }
+
+  if (user !== null && user !== "loading") {
+    router.push("/");
+    return null;
   }
 
   return (

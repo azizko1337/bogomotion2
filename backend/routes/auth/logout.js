@@ -1,7 +1,7 @@
 import createResponse from "../../utils/createResponse.js";
 
 async function logout(req, res) {
-  req.session = null;
+  req.cookies = null;
   res.status(200).json(createResponse());
 }
 

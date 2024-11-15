@@ -17,10 +17,10 @@ async function login(req, res) {
       throw new Error("Niepoprawne dane logowania.");
     }
 
-    req.session.id = user.id;
-    req.session.email = user.email;
+    req.cookies.id = user.id;
+    req.cookies.email = user.email;
 
-    res.status(200).json(createResponse());
+    res.status(200).json(createResponse(user));
   } catch (err) {
     console.log(err);
     res

@@ -4,7 +4,7 @@ import sql from "../../db/Client.js";
 
 async function remove(req, res) {
   const { password } = req.body;
-  const id = req.session.id;
+  const id = req.cookies.id;
 
   try {
     const result = await sql`select password from users where id = ${sql(id)}`;
@@ -28,7 +28,7 @@ async function remove(req, res) {
     await sql`delete from users where id = ${sql(id)}`;
 
     // Usunięcie sesji
-    req.session = null;
+    req.cookies = null;
     return res.status(200).json(createResponse("Usunięto użytkownika."));
   } catch (err) {
     console.error(err);

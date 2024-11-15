@@ -3,7 +3,7 @@ import createResponse from "../../utils/createResponse.js";
 
 async function update(req, res) {
   const { email, password } = req.body;
-  const id = req.session.userId;
+  const id = req.cookies.id;
 
   const hashed = bcrypt.hashSync(password, 10);
 

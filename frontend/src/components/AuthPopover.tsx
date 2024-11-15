@@ -7,6 +7,7 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Spinner } from "./ui/spinner";
 
 import LoginForm from "./LoginForm";
@@ -14,10 +15,18 @@ import LoginForm from "./LoginForm";
 import { useAuth } from "@/context/authContext";
 
 function AuthPopover() {
+  const router = useRouter();
+
   const { user } = useAuth();
 
-  function handleLogout() {
-    console.log("logout");
+  console.log(user);
+
+  async function handleLogout() {
+    await fetch(`${process.env.BACKEND_URL}/auth/logout`, {
+      method: "POST",
+    });
+    router.push("/");
+    router.refresh();
   }
 
   if (user === "loading") {

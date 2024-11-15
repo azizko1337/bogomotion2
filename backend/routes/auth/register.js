@@ -21,8 +21,8 @@ async function register(req, res) {
 
     const insertedUser = await getUser(email);
 
-    req.session.id = insertedUser.id;
-    req.session.email = insertedUser.email;
+    req.cookies.id = insertedUser.id;
+    req.cookies.email = insertedUser.email;
 
     console.log(insertedUser);
 

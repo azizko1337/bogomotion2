@@ -41,9 +41,23 @@ function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    setUser({ email: values.email });
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const res = await fetch(`${process.env.BACKEND_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await res.json();
+      if (data.error) {
+        throw new Error(data.errorMessage);
+      }
+      setUser(data.data);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (

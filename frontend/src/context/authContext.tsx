@@ -29,9 +29,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>("loading");
 
   useEffect(() => {
-    fetch(process.env.BACKEND_URL + "/auth/user")
+    fetch(process.env.BACKEND_URL + "/auth/user", {
+      credentials: "include",
+      method: "GET",
+    })
       .then((res) => res.json())
-      .then((data) => setUser(data.data || null))
+      .then((data) => {
+        console.log("data", data);
+        setUser(data.data || null);
+      })
       .catch(() => setUser(null));
   }, []);
 
