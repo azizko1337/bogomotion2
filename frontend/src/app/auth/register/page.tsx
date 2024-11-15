@@ -15,6 +15,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 const formSchema: z.ZodSchema = z
   .object({
@@ -32,6 +45,15 @@ const formSchema: z.ZodSchema = z
     passwordConfirmation: z.string({
       required_error: "Potwierdzenie hasła jest wymagane.",
     }),
+    birthDate: z.string({
+      required_error: "Data urodzenia jest wymagana.",
+    }),
+    sex: z.enum(["M", "F", "O"], {
+      invalid_type_error: "Nieprawidłowa opcja.",
+    }),
+    region: z.enum(["EU", "US", "ASIA"], {
+      invalid_type_error: "Nieprawidłowa opcja.",
+    }),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     message: "Hasła są różne",
@@ -45,11 +67,28 @@ function Register() {
       email: "",
       password: "",
       passwordConfirmation: "",
+      birthDate: "",
+      sex: "O",
+      region: "EU",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await res.json();
+      if (data.error) {
+        throw new Error(data.errorMessage);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -57,7 +96,7 @@ function Register() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4 w-full max-w-96"
+          className="space-y-4 w-full max-w-96 flex flex-col"
         >
           <FormField
             control={form.control}
@@ -100,6 +139,69 @@ function Register() {
                 <FormControl>
                   <Input type="password" placeholder="" {...field} />
                 </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="birthDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Data urodzenia</FormLabel>
+                <FormControl>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Input
+                        type="text"
+                        placeholder="Wybierz datę"
+                        readOnly
+                        value={field.value}
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={
+                          field.value ? new Date(field.value) : undefined
+                        }
+                        onSelect={(date) => {
+                          if (date) {
+                            field.onChange(date.toISOString().split("T")[0]);
+                          }
+                        }}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="sex"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Płeć</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Wybierz płeć" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value={"F"}>Kobieta</SelectItem>
+                    <SelectItem value={"M"}>Mężczyzna</SelectItem>
+                    <SelectItem value={"O"}>Inna</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormDescription></FormDescription>
                 <FormMessage />
               </FormItem>

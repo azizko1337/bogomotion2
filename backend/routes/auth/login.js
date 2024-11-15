@@ -1,12 +1,32 @@
+import bcrypt from "bcryptjs";
 import createResponse from "../../utils/createResponse.js";
+import getUser from "../../utils/getUser.js";
+import getUserPassword from "../../utils/getUserPassword.js";
 
 async function login(req, res) {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const id = 1;
+    const user = await getUser(email);
 
-  req.session.userId = id;
-  res.status(200).json(createResponse());
+    if (!user) {
+      throw new Error("Niepoprawne dane logowania.");
+    }
+
+    if (!bcrypt.compareSync(password, await getUserPassword(email))) {
+      throw new Error("Niepoprawne dane logowania.");
+    }
+
+    req.session.id = user.id;
+    req.session.email = user.email;
+
+    res.status(200).json(createResponse());
+  } catch (err) {
+    console.log(err);
+    res
+      .status(200)
+      .json(createResponse(null, true, "Niepoprawne dane logowania."));
+  }
 }
 
 export default login;
