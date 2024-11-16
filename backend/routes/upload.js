@@ -55,7 +55,7 @@ async function upload(req, res) {
         img_url: process.env.APP_URL + "/tmp/" + uploadedFile.name,
       }),
     });
-    const label = await labelRes.json().response;
+    const label = (await labelRes.json()).response;
 
     // move from tmp to data folder
     const asset = {
@@ -63,6 +63,7 @@ async function upload(req, res) {
       quality: qual.response.tests_passed / qual.response.total_tests,
       prediction: label?.emotion | null,
       user_id: user.id,
+      extension,
     };
     const [inserted] = await sql`insert into assets ${sql(asset)} RETURNING *`;
     const dataPath = path.join(
@@ -71,7 +72,15 @@ async function upload(req, res) {
     );
     fs.renameSync(uploadPath, dataPath);
 
-    res.status(200).json(createResponse({ emotion: label?.emotion || null }));
+    res
+      .status(200)
+      .json(
+        createResponse({
+          emotion: label?.emotion || null,
+          quality: qual.response.quality_score,
+          passed: true,
+        })
+      );
   } catch (err) {
     console.error(err);
     res.status(200).json(createResponse(null, true, "Wystąpił błąd"));

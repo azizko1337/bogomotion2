@@ -13,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
 
 import { useAuth } from "@/context/authContext";
 
@@ -32,6 +33,7 @@ const formSchema: z.ZodSchema = z.object({
 
 function LoginForm() {
   const { setUser } = useAuth();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,8 +58,15 @@ function LoginForm() {
         throw new Error(data.errorMessage);
       }
       setUser(data.data);
+      toast({
+        title: "Pomyślnie zalogowano",
+      });
     } catch (err) {
-      console.error(err);
+      toast({
+        title: "Błąd",
+        description: "Błędne dane logowania",
+        variant: "destructive",
+      });
     }
   }
 

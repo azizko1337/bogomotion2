@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("data", data);
         setUser(data.data || null);
       })
       .catch(() => setUser(null));

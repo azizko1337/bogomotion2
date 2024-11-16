@@ -13,13 +13,13 @@ import { Spinner } from "./ui/spinner";
 import LoginForm from "./LoginForm";
 
 import { useAuth } from "@/context/authContext";
+import { useToast } from "@/hooks/use-toast";
 
 function AuthPopover() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const { user, setUser } = useAuth();
-
-  console.log(user);
 
   async function handleLogout() {
     await fetch(`${process.env.BACKEND_URL}/auth/logout`, {
@@ -29,6 +29,10 @@ function AuthPopover() {
 
     setUser(null);
     router.push("/");
+
+    toast({
+      title: "Wylogowano",
+    });
   }
 
   if (user === "loading") {
@@ -85,11 +89,11 @@ function AuthPopover() {
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <Link href="/auth/user">
-              <PopoverClose asChild>
-                <Button variant="secondary">Edytuj dane profilu</Button>
-              </PopoverClose>
-            </Link>
+            <PopoverClose asChild>
+              <Button disabled={true} variant="secondary">
+                <Link href="/auth/user">Edytuj dane profilu</Link>
+              </Button>
+            </PopoverClose>
           </div>
           <div className="grid gap-2">
             <PopoverClose asChild>

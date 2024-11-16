@@ -19,6 +19,10 @@ import authUpdateRoute from "./routes/auth/update.js";
 import authRemoveRoute from "./routes/auth/remove.js";
 import authUserRoute from "./routes/auth/user.js";
 import uploadRoute from "./routes/upload.js";
+import assetRoute from "./routes/asset.js";
+import reviewRoute from "./routes/review.js";
+import averageReviewRoute from "./routes/averagereview.js";
+import decideRoute from "./routes/decide.js";
 
 const app = express();
 
@@ -43,6 +47,14 @@ app.delete("/auth/remove", authRemoveRoute);
 app.get("/auth/user", authUserRoute);
 // upload route
 app.post("/upload", uploadRoute);
+// get asset route
+app.get("/asset", assetRoute);
+// add review
+app.post("/review", reviewRoute);
+// get average review to decide
+app.get("/average_review", averageReviewRoute);
+// decide
+app.post("/decide", decideRoute);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

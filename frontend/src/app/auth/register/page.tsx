@@ -29,6 +29,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { useToast } from "@/hooks/use-toast";
 
 import { useAuth } from "@/context/authContext";
 
@@ -79,6 +80,7 @@ const formSchema: z.ZodSchema = z
 
 function Register() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const { user } = useAuth();
 
@@ -108,8 +110,15 @@ function Register() {
         throw new Error(data.errorMessage);
       }
       router.push("/");
+      toast({
+        title: "Poprawnie zarejestrowano.",
+      });
     } catch (err) {
-      console.log(err);
+      toast({
+        title: "Błąd",
+        description: "Taki użytkownik już istnieje.",
+        variant: "destructive",
+      });
     }
   }
 

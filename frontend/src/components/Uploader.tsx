@@ -2,15 +2,17 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { ImagePlus } from "lucide-react";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast"
 import axios from "axios";
 import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 import { TypographyInlineCode } from "./ui/typography";
 import { Input } from "@/components/ui/input";
 import { SpinnerDiv } from "@/components/ui/spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 function Uploader() {
+  const { toast } = useToast()
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("Wybierz plik");
   const [uploadedFile, setUploadedFile] = useState({});
@@ -18,16 +20,27 @@ function Uploader() {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  const allowedExtensions = ["png", "jpg", "jpeg", "mp3", "wav"];
+
   const onChange = (e) => {
-    setFile(e.target.files[0]);
-    setFilename(e.target.files[0].name);
+    const selectedFile = e.target.files[0];
+    const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
+
+    if (!allowedExtensions.includes(fileExtension)) {
+      setMessage("Niedozwolony typ pliku. Dozwolone rozszerzenia: png, jpg, jpeg, mp3, wav.");
+      return;
+    }
+
+    setFile(selectedFile);
+    setFilename(selectedFile.name);
 
     // preview
-    const previewURL = URL.createObjectURL(e.target.files[0]);
-    setUploadedFile({ fileName: e.target.files[0].name, filePath: previewURL });
+    const previewURL = URL.createObjectURL(selectedFile);
+    setUploadedFile({ fileName: selectedFile.name, filePath: previewURL });
   };
 
   const onSubmit = async (e) => {
+    setMessage("");
     e.preventDefault();
 
     const formData = new FormData();
@@ -52,11 +65,48 @@ function Uploader() {
           },
         }
       );
+      const data = res.data.data;
+
+      console.log(data)
+
+      if(data.error || !data.passed){
+        setMessage("Plik nie przeszedł wymagań jakości.")
+      }else{
+        let emotion = "nieznana";
+        switch (data.emotion){
+          case "angry":
+            emotion = "złość";
+            break;
+          case "happy":
+            emotion = "szczęście";
+            break;
+          case "disgust":
+            emotion = "obrzydzenie";
+            break;
+          case "fear":
+            emotion = "strach";
+            break;
+          case "neutral":
+            emotion = "neutralność"; 
+            break;
+          case "sad":
+            emotion = "smutek";
+          case "surprise":
+            emotion = "zaskoczenie";
+            break;
+        }
+        toast({title: "Plik został przesłany pomyślnie.", description: `Rozpoznana emocja: ${emotion}, wskaźnik jakości: ${data.quality}.`})
+      }
+
+      setFile("");
+        setFilename("Wybierz plik");
+        setUploadedFile({});
 
       setLoading(false);
       // Clear percentage
       setTimeout(() => setUploadPercentage(0), 10000);
     } catch (err) {
+      setMessage("Niepoprawny plik.");
       setUploadPercentage(0);
       setLoading(false);
     }
@@ -68,6 +118,12 @@ function Uploader() {
 
   return (
     <div className="">
+      {message && (
+        <Alert className="my-4" variant="destructive">
+          <AlertTitle>Błąd</AlertTitle>
+          <AlertDescription>{message}</AlertDescription>
+        </Alert>
+      )}
       <form className="flex flex-col items-center gap-4" onSubmit={onSubmit}>
         <div className="flex flex-col gap-2 items-center">
           {uploadedFile ? (
@@ -81,7 +137,7 @@ function Uploader() {
           ) : (
             <ImagePlus size={102} />
           )}
-          <Input type="file" onChange={onChange} />
+          <Input type="file"  onChange={onChange} />
           <TypographyInlineCode>{filename}</TypographyInlineCode>
         </div>
         <Progress value={uploadPercentage} />

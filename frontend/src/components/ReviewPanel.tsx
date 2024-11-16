@@ -2,6 +2,7 @@ import { Slider } from "@/components/ui/slider";
 import { useState } from "react";
 import { TypographyMuted, TypographyInlineCode } from "./ui/typography";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 
 function ReviewPanel(props: {
   onSubmit: (values: {
@@ -13,18 +14,26 @@ function ReviewPanel(props: {
     sad: number;
     surprise: number;
   }) => void;
+  values: {
+    angry: number;
+    disgust: number;
+    fear: number;
+    happy: number;
+    neutral: number;
+    sad: number;
+    surprise: number;
+  };
+  setValues: (values: {
+    angry: number;
+    disgust: number;
+    fear: number;
+    happy: number;
+    neutral: number;
+    sad: number;
+    surprise: number;
+  }) => void;
 }) {
-  const { onSubmit } = props;
-
-  const [values, setValues] = useState({
-    angry: 0,
-    disgust: 0,
-    fear: 0,
-    happy: 0,
-    neutral: 0,
-    sad: 0,
-    surprise: 0,
-  });
+  const { onSubmit, values, setValues } = props;
 
   function handleChange(key: string, value: number) {
     setValues((prev) => ({ ...prev, [key]: value }));

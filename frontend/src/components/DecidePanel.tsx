@@ -2,8 +2,10 @@ import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 import { TypographyMuted, TypographyInlineCode } from "./ui/typography";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 
 function DecidePanel(props: {
+  onSubmit: (value) => void;
   values: {
     angry: number;
     disgust: number;
@@ -14,17 +16,14 @@ function DecidePanel(props: {
     surprise: number;
   };
 }) {
-  const { values } = props;
-
-  //   function handleChange(key: string, value: number) {
-  //     setValues((prev) => ({ ...prev, [key]: value }));
-  //   }
+  const { onSubmit, values } = props;
+  const [value, setValue] = useState(0);
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        // onSubmit(values);
+        onSubmit(value);
       }}
       className="w-full max-w-[250px] flex flex-col gap-5"
     >
@@ -89,12 +88,25 @@ function DecidePanel(props: {
           <Progress value={values.surprise} />
         </div>
       </div>
+      <div className="my-4">
+        <div className="grow flex flex-col gap-1">
+          <TypographyMuted>
+            Zgadzam się na{" "}
+            <TypographyInlineCode>({value})%</TypographyInlineCode>
+          </TypographyMuted>
+          <Slider
+            value={[value]}
+            onValueChange={(newValue) => setValue(newValue[0])}
+            min={0}
+            max={100}
+            step={1}
+          />
+        </div>
+      </div>
+
       <div className="flex justify-end gap-2">
         <Button type="submit" variant="default">
-          Przyjmij
-        </Button>
-        <Button type="submit" variant="secondary">
-          Odrzuć
+          Wyślij
         </Button>
       </div>
     </form>
