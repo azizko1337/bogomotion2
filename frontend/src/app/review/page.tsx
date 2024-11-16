@@ -8,14 +8,12 @@ import { useEffect, useState } from "react";
 
 import { SpinnerDiv } from "@/components/ui/spinner";
 import ReviewPanel from "@/components/ReviewPanel";
+import { useToast } from "@/hooks/use-toast";
 
 function Review() {
   const { user } = useAuth();
   const router = useRouter();
-  if (user === null) {
-    router.push("/");
-    return null;
-  }
+  const { toast } = useToast();
 
   const [values, setValues] = useState({
     angry: 0,
@@ -60,7 +58,13 @@ function Review() {
           surprise: Math.floor(data.data.review.surprise * 100),
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      toast({
+        title: "Błąd",
+        description: "Brak danych do oceny.",
+        variant: "destructive",
+      });
+    }
   }
 
   useEffect(() => {
@@ -102,9 +106,23 @@ function Review() {
         throw new Error(data.errorMessage);
       }
       await fetchAsset();
+
+      toast({
+        title: "Dodano zasób",
+      });
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Błąd",
+        description: "Błąd serwera.",
+        variant: "destructive",
+      });
+      router.push("/");
     }
+  }
+
+  if (user === null) {
+    router.push("/");
+    return null;
   }
 
   if (!asset) {

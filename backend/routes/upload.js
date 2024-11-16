@@ -57,6 +57,11 @@ async function upload(req, res) {
     });
     const label = (await labelRes.json()).response;
 
+    if (label.error === "true") {
+      fs.unlinkSync(uploadPath);
+      throw new Error("Labeling error");
+    }
+
     // move from tmp to data folder
     const asset = {
       type: "image",
@@ -64,6 +69,10 @@ async function upload(req, res) {
       prediction: label?.emotion | null,
       user_id: user.id,
       extension,
+      w_img: label.w,
+      x_img: label.x,
+      y_img: label.y,
+      z_img: label.z,
     };
     const [inserted] = await sql`insert into assets ${sql(asset)} RETURNING *`;
     const dataPath = path.join(
@@ -72,18 +81,20 @@ async function upload(req, res) {
     );
     fs.renameSync(uploadPath, dataPath);
 
+    res.status(200).json(
+      createResponse({
+        emotion: label?.emotion || null,
+        quality: qual.response.quality_score,
+        passed: true,
+      })
+    );
+  } catch (err) {
+    console.error(err);
     res
       .status(200)
       .json(
-        createResponse({
-          emotion: label?.emotion || null,
-          quality: qual.response.quality_score,
-          passed: true,
-        })
+        createResponse(null, true, "Próbka nie spełnia wymogów jakościowych")
       );
-  } catch (err) {
-    console.error(err);
-    res.status(200).json(createResponse(null, true, "Wystąpił błąd"));
   }
 }
 

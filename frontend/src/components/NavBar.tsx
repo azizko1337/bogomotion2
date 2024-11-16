@@ -30,7 +30,8 @@ function NavBar() {
       <header className="sticky top-0 z-50 w-full border-b bg-background">
         <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2" prefetch={false}>
-            Hackathon
+            <img width="50" src="/logo.png" />
+            Bogomotion2
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
             <Link
@@ -97,9 +98,10 @@ function NavBar() {
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2" prefetch={false}>
-          Hackathon
+          <img width="50" src="/logo.png" />
+          Bogomotion2
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+        <nav className="hidden items-center gap-6 text-sm font-medium md:flex gap-2">
           <Link
             href="/add"
             className="text-muted-foreground hover:text-foreground"
@@ -107,6 +109,7 @@ function NavBar() {
           >
             Dodaj dataset
           </Link>
+
           <Link
             href="/review"
             className="text-muted-foreground hover:text-foreground"
@@ -155,8 +158,8 @@ function NavBar() {
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="md:hidden">
-              <div className="grid gap-4 p-4">
+            <SheetContent side="left" className="md:hidden ">
+              <div className="flex flex-col gap-4">
                 <SheetClose>
                   <Link
                     href="/add"
@@ -165,6 +168,8 @@ function NavBar() {
                   >
                     Dodaj dataset
                   </Link>
+                </SheetClose>
+                <SheetClose>
                   <Link
                     href="/review"
                     className="text-sm font-medium text-muted-foreground hover:text-foreground"
@@ -172,6 +177,8 @@ function NavBar() {
                   >
                     Oceń dataset
                   </Link>
+                </SheetClose>
+                <SheetClose>
                   <Link
                     href="/decide"
                     className="text-sm font-medium text-muted-foreground hover:text-foreground"

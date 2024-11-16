@@ -25,7 +25,6 @@ async function review(req, res) {
 
     res.status(200).json(createResponse());
   } catch (err) {
-    con;
     res.status(200).json(createResponse(null, true, "Wystąpił błąd."));
   }
 }

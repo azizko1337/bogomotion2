@@ -30,9 +30,9 @@ function AuthPopover() {
     setUser(null);
     router.push("/");
 
-    toast({
-      title: "Wylogowano",
-    });
+    // toast({
+    //   title: "Wylogowano",
+    // });
   }
 
   if (user === "loading") {

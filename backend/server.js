@@ -23,6 +23,7 @@ import assetRoute from "./routes/asset.js";
 import reviewRoute from "./routes/review.js";
 import averageReviewRoute from "./routes/averagereview.js";
 import decideRoute from "./routes/decide.js";
+import queryRoute from "./routes/query.js";
 
 const app = express();
 
@@ -55,6 +56,8 @@ app.post("/review", reviewRoute);
 app.get("/average_review", averageReviewRoute);
 // decide
 app.post("/decide", decideRoute);
+// query llm
+app.post("/query", queryRoute);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

@@ -4,16 +4,14 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import { TypographyH1 } from "@/components/ui/typography";
 import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 import DecidePanel from "@/components/DecidePanel";
 
 function Decide() {
+  const { toast } = useToast();
   const { user } = useAuth();
   const router = useRouter();
-  if (user === null) {
-    router.push("/");
-    return null;
-  }
 
   useEffect(() => {
     fetchAsset();
@@ -56,25 +54,47 @@ function Decide() {
         surprise: Math.floor(data.data.asset.surprise * 100),
       });
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Błąd",
+        description: "Brak danych do decyzji.",
+        variant: "destructive",
+      });
+      router.push("/");
     }
   }
 
   async function onSubmit(value) {
-    const res = await fetch(process.env.BACKEND_URL + "/decide", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        asset_id: asset?.id,
-        value,
-      }),
-    });
-    const data = await res.json();
+    try {
+      const res = await fetch(process.env.BACKEND_URL + "/decide", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          asset_id: asset?.asset_id,
+          value,
+        }),
+      });
+      const data = await res.json();
 
-    await fetchAsset();
+      toast({
+        title: "Dodano decyzję.",
+      });
+
+      await fetchAsset();
+    } catch (error) {
+      toast({
+        title: "Błąd",
+        description: "Błąd serwera.",
+        variant: "destructive",
+      });
+    }
+  }
+
+  if (user === null) {
+    router.push("/");
+    return null;
   }
 
   return (

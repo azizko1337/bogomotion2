@@ -28,10 +28,12 @@ async function averageReview(req, res) {
     From assets a
     Join assets_classification ac On a.id = ac.asset_id;`;
 
+    if (!asset) {
+      throw new Error("Nie znaleziono żadnych aktywów do oceny.");
+    }
+
     asset.src =
       process.env.APP_URL + "/data/" + asset.asset_id + asset.extension;
-
-    console.log(asset);
 
     res.status(200).json(createResponse({ asset }));
   } catch (err) {

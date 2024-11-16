@@ -82,7 +82,7 @@ function Register() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -109,6 +109,7 @@ function Register() {
       if (data.error) {
         throw new Error(data.errorMessage);
       }
+      setUser(data.data);
       router.push("/");
       toast({
         title: "Poprawnie zarejestrowano.",

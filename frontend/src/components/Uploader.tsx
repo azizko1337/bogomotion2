@@ -2,17 +2,17 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { ImagePlus } from "lucide-react";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 import { TypographyInlineCode } from "./ui/typography";
 import { Input } from "@/components/ui/input";
 import { SpinnerDiv } from "@/components/ui/spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 function Uploader() {
-  const { toast } = useToast()
+  const { toast } = useToast();
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("Wybierz plik");
   const [uploadedFile, setUploadedFile] = useState({});
@@ -25,9 +25,11 @@ function Uploader() {
   const onChange = (e) => {
     const selectedFile = e.target.files[0];
     const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
-
-    if (!allowedExtensions.includes(fileExtension)) {
-      setMessage("Niedozwolony typ pliku. Dozwolone rozszerzenia: png, jpg, jpeg, mp3, wav.");
+ 
+       if (!allowedExtensions.includes(fileExtension)) {
+      setMessage(
+        "Niedozwolony typ pliku. Dozwolone rozszerzenia: png, jpg, jpeg, mp3, wav."
+      );
       return;
     }
 
@@ -67,13 +69,13 @@ function Uploader() {
       );
       const data = res.data.data;
 
-      console.log(data)
+      console.log(data);
 
-      if(data.error || !data.passed){
-        setMessage("Plik nie przeszedł wymagań jakości.")
-      }else{
+      if (data.error || !data.passed) {
+        setMessage("Plik nie przeszedł wymagań jakości.");
+      } else {
         let emotion = "nieznana";
-        switch (data.emotion){
+        switch (data.emotion) {
           case "angry":
             emotion = "złość";
             break;
@@ -87,7 +89,7 @@ function Uploader() {
             emotion = "strach";
             break;
           case "neutral":
-            emotion = "neutralność"; 
+            emotion = "neutralność";
             break;
           case "sad":
             emotion = "smutek";
@@ -95,18 +97,21 @@ function Uploader() {
             emotion = "zaskoczenie";
             break;
         }
-        toast({title: "Plik został przesłany pomyślnie.", description: `Rozpoznana emocja: ${emotion}, wskaźnik jakości: ${data.quality}.`})
+        toast({
+          title: "Plik został przesłany pomyślnie.",
+          description: `Rozpoznana emocja: ${emotion}, wskaźnik jakości: ${data.quality}.`,
+        });
       }
 
       setFile("");
-        setFilename("Wybierz plik");
-        setUploadedFile({});
+      setFilename("Wybierz plik");
+      setUploadedFile({});
 
       setLoading(false);
       // Clear percentage
       setTimeout(() => setUploadPercentage(0), 10000);
     } catch (err) {
-      setMessage("Niepoprawny plik.");
+      setMessage("Próbka nie spełnia wymogów jakościowych.");
       setUploadPercentage(0);
       setLoading(false);
     }
@@ -137,7 +142,7 @@ function Uploader() {
           ) : (
             <ImagePlus size={102} />
           )}
-          <Input type="file"  onChange={onChange} />
+          <Input type="file" onChange={onChange} />
           <TypographyInlineCode>{filename}</TypographyInlineCode>
         </div>
         <Progress value={uploadPercentage} />

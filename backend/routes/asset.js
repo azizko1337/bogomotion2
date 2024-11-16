@@ -16,20 +16,22 @@ async function asset(req, res) {
     console.log(user);
 
     const [asset] =
-      await sql`SELECT * FROM assets WHERE (SELECT COUNT(*) FROM reviews WHERE reviews.asset_id = assets.id) < 3 ORDER BY RANDOM() LIMIT 1`;
-    //   await sql`Select asset_id, avg(angry) angry, avg(disgust) disgust, avg(fear) fear, avg(happy) happy, avg(neutral) neutral, avg(sad) sad, avg(surprise) surprise
-    // From Reviews
-    // Group By asset_id
-    // Having asset_id = (
-    //     Select asset_id
-    //     From reviews
-    //     Order By random()
-    //     Limit 1
-    // )
-    // AND ${user.id} NOT IN (
-    //     Select deciding_user
-    //     From decisions
-    // )`;
+      // await sql`SELECT * FROM assets WHERE (SELECT COUNT(*) FROM reviews WHERE reviews.asset_id = assets.id) < 3 ORDER BY RANDOM() LIMIT 1`;
+      await sql`SELECT a.* 
+        FROM assets a 
+        WHERE 
+            3 > (
+                SELECT COUNT(*) 
+                FROM reviews 
+                WHERE reviews.asset_id = a.id
+            )
+            AND ${user.id} NOT IN (
+                SELECT r.user_id 
+                FROM reviews r 
+                WHERE r.asset_id = a.id
+            )
+        ORDER BY RANDOM() 
+        LIMIT 1`;
     if (!asset) {
       throw new Error("Nie znaleziono żadnych aktywów do oceny.");
     }
