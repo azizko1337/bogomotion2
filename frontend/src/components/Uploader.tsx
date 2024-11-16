@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 import { TypographyInlineCode } from "./ui/typography";
 import { Input } from "@/components/ui/input";
+import { SpinnerDiv } from "@/components/ui/spinner";
 
 function Uploader() {
   const [file, setFile] = useState("");
@@ -15,6 +16,7 @@ function Uploader() {
   const [uploadedFile, setUploadedFile] = useState({});
   const [message, setMessage] = useState("");
   const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const onChange = (e) => {
     setFile(e.target.files[0]);
@@ -32,6 +34,7 @@ function Uploader() {
     formData.append("file", file);
 
     try {
+      setLoading(true);
       const res = await axios.post(
         process.env.BACKEND_URL + "/upload",
         formData,
@@ -50,14 +53,18 @@ function Uploader() {
         }
       );
 
+      setLoading(false);
       // Clear percentage
       setTimeout(() => setUploadPercentage(0), 10000);
     } catch (err) {
       setUploadPercentage(0);
+      setLoading(false);
     }
   };
 
-  console.log("uploadedFile", file);
+  if (loading) {
+    return <SpinnerDiv size="large" />;
+  }
 
   return (
     <div className="">
