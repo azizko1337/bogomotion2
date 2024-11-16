@@ -58,6 +58,7 @@ function Footer() {
   return (
     <footer className="border-t border-border/40 py-6 dark:border-border md:py-0">
       <div className="flex justify-end items-center gap md:h-24 p-5 max-w-6xl mx-auto">
+        <div className="grow"></div>
         <p className="text-balance text-center text-sm leading-loose text-muted-foreground">
           Zbudowano podczas{" "}
           <a
@@ -82,7 +83,9 @@ function Footer() {
       </div>
 
       <Sheet>
-        <SheetTrigger className="absolute bottom-1 left-1">Open</SheetTrigger>
+        <SheetTrigger className="absolute bottom-2 left-4">
+          <img width="65" src="/ai.ico" />
+        </SheetTrigger>
         <SheetContent className="gap-4 flex flex-col">
           {loading ? (
             <SpinnerDiv />

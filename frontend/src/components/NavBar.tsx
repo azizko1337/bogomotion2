@@ -31,7 +31,7 @@ function NavBar() {
         <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2" prefetch={false}>
             <img width="50" src="/logo.png" />
-            Bogomotion2
+            <img width="100" src="/tribal.png" />
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
             <Link
@@ -99,7 +99,7 @@ function NavBar() {
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2" prefetch={false}>
           <img width="50" src="/logo.png" />
-          Bogomotion2
+          <img width="100" src="/tribal.png" />
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex gap-2">
           <Link
