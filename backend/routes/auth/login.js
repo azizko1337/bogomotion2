@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import createResponse from "../../utils/createResponse.js";
 import getUser from "../../utils/getUser.js";
 import getUserPassword from "../../utils/getUserPassword.js";
+import cookieOptions from "../../utils/cookieOptions.js";
 
 async function login(req, res) {
   try {
@@ -17,12 +18,13 @@ async function login(req, res) {
       throw new Error("Niepoprawne dane logowania.");
     }
 
-    req.cookies.id = user.id;
-    req.cookies.email = user.email;
+    res.cookie("user", JSON.stringify({
+      id: user.id,
+      email: user.email
+    }), cookieOptions);
 
     res.status(200).json(createResponse(user));
   } catch (err) {
-    console.log(err);
     res
       .status(200)
       .json(createResponse(null, true, "Niepoprawne dane logowania."));

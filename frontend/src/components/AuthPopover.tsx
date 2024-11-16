@@ -17,16 +17,18 @@ import { useAuth } from "@/context/authContext";
 function AuthPopover() {
   const router = useRouter();
 
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
   console.log(user);
 
   async function handleLogout() {
     await fetch(`${process.env.BACKEND_URL}/auth/logout`, {
-      method: "POST",
+      method: "GET",
+      credentials: "include",
     });
+
+    setUser(null);
     router.push("/");
-    router.refresh();
   }
 
   if (user === "loading") {

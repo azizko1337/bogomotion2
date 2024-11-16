@@ -1,5 +1,7 @@
 import express from "express";
 
+import cookieParser from "cookie-parser";
+
 // load .env
 import "dotenv/config";
 
@@ -20,7 +22,7 @@ const app = express();
 
 // middlewares
 app.use(corsMiddleware);
-app.use(sessionMiddleware);
+app.use(cookieParser());
 app.use(bodyParserMiddleware);
 
 // auth routes

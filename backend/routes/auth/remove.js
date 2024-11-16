@@ -16,11 +16,9 @@ async function remove(req, res) {
         .json(createResponse(null, true, "Użytkownik nie znaleziony."));
     }
 
-    const passwordMatch = await bcrypt.compare(password, hashedPassword);
-
-    if (!passwordMatch) {
+    if (bcrypt.compare(password, hashedPassword)) {
       return res
-        .status(401)
+        .status(200)
         .json(createResponse(null, true, "Niepoprawne hasło."));
     }
 
@@ -28,11 +26,11 @@ async function remove(req, res) {
     await sql`delete from users where id = ${sql(id)}`;
 
     // Usunięcie sesji
-    req.cookies = null;
-    return res.status(200).json(createResponse("Usunięto użytkownika."));
+    req.cookie("user", null);
+
+    return res.status(200).json(createResponse());
   } catch (err) {
-    console.error(err);
-    return res.status(500).json(createResponse(null, true, "Błąd serwera."));
+    return res.status(500).json(createResponse(null, true, "Błędne hasło."));
   }
 }
 

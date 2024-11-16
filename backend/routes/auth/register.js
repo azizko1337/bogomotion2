@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import createResponse from "../../utils/createResponse.js";
 import sql from "../../db/Client.js";
 import getUser from "../../utils/getUser.js";
+import cookieOptions from "../../utils/cookieOptions.js"
 
 async function register(req, res) {
   try {
@@ -21,14 +22,13 @@ async function register(req, res) {
 
     const insertedUser = await getUser(email);
 
-    req.cookies.id = insertedUser.id;
-    req.cookies.email = insertedUser.email;
-
-    console.log(insertedUser);
+    res.cookie("user", JSON.stringify({
+      id: insertedUser.id,
+      email: insertedUser.email
+    }), cookieOptions)
 
     res.status(200).json(createResponse());
   } catch (error) {
-    console.log(error);
     res
       .status(200)
       .json(createResponse(null, true, "Niepoprawne dane rejestracji"));
