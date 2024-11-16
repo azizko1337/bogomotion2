@@ -234,6 +234,45 @@ function Register() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="region"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Region</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Wybierz region" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value={"AM_NORTH"}>
+                      Ameryka Północna{" "}
+                    </SelectItem>
+                    <SelectItem value={"AM_SOUTH"}>
+                      Ameryka Południowa{" "}
+                    </SelectItem>
+                    <SelectItem value={"AUS"}>Australia i Oceania </SelectItem>
+                    <SelectItem value={"EU_WEST"}>Europa Zachodnia </SelectItem>
+                    <SelectItem value={"EU_EAST"}>Europa Wschodnia </SelectItem>
+                    <SelectItem value={"EU_SOUTH"}>
+                      Europa Południowa{" "}
+                    </SelectItem>
+                    <SelectItem value={"ASI_EAST"}>Azja Wschodnia </SelectItem>
+                    <SelectItem value={"ASI_MID"}>Azja Środkowa </SelectItem>
+                    <SelectItem value={"ASI_WEST"}>Azja Zachodnia </SelectItem>
+                    <SelectItem value={"AFR"}>Afryka </SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <Button type="submit">Zarejestruj się</Button>
         </form>
       </Form>

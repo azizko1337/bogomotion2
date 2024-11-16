@@ -73,7 +73,7 @@ function AuthPopover() {
       <PopoverTrigger asChild>
         <Button variant="ghost">
           <User />
-          {user.email}
+          {user.email.split("@")[0]}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full max-w-80">
