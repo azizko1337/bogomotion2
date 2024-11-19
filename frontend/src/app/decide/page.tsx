@@ -101,8 +101,15 @@ function Decide() {
     <div>
       <TypographyH1>Zatwierdź ocenę</TypographyH1>
       <div className="w-full grow flex flex-col items-center justify-center gap-6 lg:flex-row my-8">
-        <div className="w-full max-w-[600px] h-[500px] overflow-hidden">
-          <img src={asset?.src} />
+        <div
+          style={{
+            backgroundImage: `url(${asset?.src})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          className="w-full max-w-[600px] h-[500px] overflow-hidden"
+        >
+          {/* <img src={asset?.src} /> */}
         </div>
         <DecidePanel values={values} onSubmit={onSubmit} />
       </div>

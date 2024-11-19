@@ -133,8 +133,15 @@ function Review() {
     <div>
       <TypographyH1>Oceń dataset</TypographyH1>
       <div className="w-full grow flex flex-col items-center justify-center gap-6 lg:flex-row my-8">
-        <div className="w-full max-w-[600px] h-[500px] overflow-hidden">
-          <img className="w-full" src={asset.src} />
+        <div
+          className="w-full max-w-[600px] h-[500px] overflow-hidden"
+          style={{
+            backgroundImage: `url(${asset?.src})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          {/* <img className="w-full" src={asset.src} /> */}
         </div>
         <ReviewPanel
           values={values}
