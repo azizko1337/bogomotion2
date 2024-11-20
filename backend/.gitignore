@@ -1,2 +1,8 @@
 node_modules/
 .env
+
+public/data/*
+!public/data/.gitkeep
+
+public/tmp/*
+!public/tmp/.gitkeep
