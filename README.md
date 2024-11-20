@@ -1,4 +1,4 @@
-# BOGOMOTION2
+# BOGOMOTION2 *powered by [AI module Bogomotion-2.0-API](https://github.com/PanPeryskop/Bogomotion-2.0-API)*
 
 ## Smart dataset creator made during a 24-hour Hackathon
 
