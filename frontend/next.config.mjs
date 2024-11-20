@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    BACKEND_URL: "http://10.150.160.237:5047",
+    BACKEND_URL: "http://192.168.0.103:5047",
   },
+  // force build
   typescript: {
     ignoreBuildErrors: true,
   },
